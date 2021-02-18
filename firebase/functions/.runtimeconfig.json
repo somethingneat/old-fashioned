@@ -1,0 +1,20 @@
+{
+  "env": {
+    "test": {
+      "emulate": "true",
+      "mode": "true",
+      "shops": "neat-playground.myshopify.com"
+    },
+    "shopify": {
+      "client": {
+        "id": "4647fd42801a11c8d8f4a1bac98c0ec3",
+        "secret": "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"
+      }
+    },
+    "frontend": {
+      "resource": {
+        "url": "https://easygallery.ngrok.io"
+      }
+    }
+  }
+}

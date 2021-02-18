@@ -1,0 +1,43 @@
+{
+  "name": "old-fashioned",
+  "version": "1.0.0",
+  "description": "html and vanilla js scaffold for shopify app dev",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp",
+    "start": "gulp serve",
+    "prod": "cross-env NODE_ENV=prod gulp",
+    "staging": "cross-env NODE_ENV=staging gulp"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-async-to-generator": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@fortawesome/fontawesome-free": "^5.13.0",
+    "bootstrap": "^4.5.0",
+    "browser-sync": "^2.26.7",
+    "cross-env": "^7.0.2",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-cssbeautify": "^2.0.1",
+    "gulp-cssmin": "^0.2.0",
+    "gulp-html-beautify": "^1.0.1",
+    "gulp-html-partial": "^1.0.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-if": "^2.0.2",
+    "gulp-imagemin": "^5.0.3",
+    "gulp-js-import": "^1.0.6",
+    "gulp-sass": "^4.1.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-string-replace": "^1.1.2",
+    "gulp-uglify": "^3.0.2"
+  },
+  "dependencies": {
+    "gulp-google-webfonts": "^2.1.0"
+  },
+  "author": "tammychu",
+  "license": "ISC"
+}

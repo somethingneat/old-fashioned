@@ -1,0 +1,21 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://unpkg.com/@shopify/app-bridge"></script>
+<link rel="stylesheet" href="./assets/css/uptown.css" />
+<link rel="stylesheet" href="./assets/css/style.css" />
+<script type="text/javascript">
+  function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(";");
+    for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) == 0)
+        return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  }
+
+  function setCookie(name, value) {
+    document.cookie = name + "=" + (value || "") + "; SameSite=None; Secure; path=/";
+  }
+</script>
