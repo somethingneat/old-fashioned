@@ -1,5 +1,4 @@
 const functions = require("firebase-functions");
-const request = require("request");
 const rp = require("request-promise");
 const SHOPIFY_CLIENT_SECRET = functions.config().env.shopify.client.secret;
 const SHOPIFY_CLIENT_ID = functions.config().env.shopify.client.id;
