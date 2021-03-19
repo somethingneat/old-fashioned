@@ -5,12 +5,7 @@
       const AppBridge = window["app-bridge"];
       const createApp = AppBridge.createApp;
       const apiKey = "{SHOPIFY_API_KEY}";
-      const redirectUri = `{CLOUD_FUNCTION_ENDPOINT}/oauthCallback`;
-      const permissionUrl =
-        `/oauth/authorize?client_id=${apiKey}` +
-        `&scope=read_script_tags,write_script_tags&redirect_uri=${redirectUri}`;
       const urlParams = new URLSearchParams(window.location.search);
-      const token = getCookie("access_token");
       const shopOrigin = urlParams.get("shop");
       const app = createApp({
         apiKey: apiKey,
@@ -18,6 +13,7 @@
       });
       const Redirect = AppBridge.actions.Redirect;
       const redirect = Redirect.create(app);
+      const token = getCookie("access_token");
 
       if (!!token) {
         fetch(
@@ -32,6 +28,10 @@
       }
 
       function oauth() {
+        const redirectUri = `{CLOUD_FUNCTION_ENDPOINT}/oauthCallback`;
+        const permissionUrl =
+          `/oauth/authorize?client_id=${apiKey}` +
+          `&scope=read_script_tags,write_script_tags&redirect_uri=${redirectUri}`;
         redirect.dispatch(Redirect.Action.ADMIN_PATH, permissionUrl);
       }
 
