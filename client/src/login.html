@@ -1,18 +1,14 @@
 <html>
   <head>
-    <partials src="head-scripts.html"></partials>
+    <partial src="head-scripts.html"></partial>
     <script>
-      var AppBridge = window["app-bridge"];
-      var createApp = AppBridge.createApp;
-      var actions = AppBridge.actions;
-      var Redirect = actions.Redirect;
+      const AppBridge = window["app-bridge"];
+      const createApp = AppBridge.createApp;
       const apiKey = "{SHOPIFY_API_KEY}";
-      const redirectUri = "https://easygallery.ngrok.io/callback.html";
+      const redirectUri = `{CLOUD_FUNCTION_ENDPOINT}/oauthCallback`;
       const permissionUrl =
-        "/oauth/authorize?client_id=" +
-        apiKey +
-        "&scope=read_script_tags,write_script_tags&redirect_uri=" +
-        redirectUri;
+        `/oauth/authorize?client_id=${apiKey}` +
+        `&scope=read_script_tags,write_script_tags&redirect_uri=${redirectUri}`;
       const urlParams = new URLSearchParams(window.location.search);
       const token = getCookie("access_token");
       const shopOrigin = urlParams.get("shop");
@@ -20,48 +16,31 @@
         apiKey: apiKey,
         shopOrigin: shopOrigin,
       });
+      const Redirect = AppBridge.actions.Redirect;
+      const redirect = Redirect.create(app);
 
       if (!!token) {
-        $.getJSON(
-          `{CLOUD_FUNCTION_ENDPOINT}/getResource?shop=${shopOrigin}&token=${token}&resource=shop`,
-          function (data) {
-            if (data === "forbidden") {
-              oauth();
-            } else {
-              console.log("not oauthing");
-              redirect();
-            }
-          }
-        ).fail(function () {
-          oauth();
-        });
+        fetch(
+          `{CLOUD_FUNCTION_ENDPOINT}/getResource` +
+            `?shop=${shopOrigin}&token=${token}&resource=shop`
+        )
+          .then((response) => response.json())
+          .then(goToIndex)
+          .catch(oauth);
       } else {
         oauth();
       }
 
       function oauth() {
-        console.log("oauth");
-        // If the current window is the 'parent', change the URL by setting location.href
-        if (window.top == window.self) {
-          window.location.assign(
-            "https://" + shopOrigin + "/admin" + permissionUrl
-          );
-          // If the current window is the 'child', change the parent's URL with Shopify App Bridge's Redirect action
-        } else {
-          Redirect.create(app).dispatch(
-            Redirect.Action.ADMIN_PATH,
-            permissionUrl
-          );
-        }
+        redirect.dispatch(Redirect.Action.ADMIN_PATH, permissionUrl);
       }
 
-      function redirect() {
-        console.log("redirect");
-        location.href =
-          "index.html?shop=" + shopOrigin + "&access_token=" + token;
+      function goToIndex() {
+        redirect.dispatch(
+          Redirect.Action.APP,
+          `/index.html?shop=${shopOrigin}&access_token=${token}`
+        );
       }
-
-
     </script>
   </head>
 
