@@ -99,7 +99,7 @@ function js() {
   );
 
   for (const key in envVars) {
-    stream.pipe(replace(new RegExp(`\\$\{${key}\}`, "g"), envVars[key]));
+    stream.pipe(replace(new RegExp(`\\{${key}\}`, "g"), envVars[key]));
   }
 
   return stream
