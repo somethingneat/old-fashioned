@@ -3,7 +3,7 @@
     <partial src="head-scripts.html"></partial>
     <script>
       const AppBridge = window["app-bridge"];
-      const createApp = AppBridge.createApp;
+      const createApp = AppBridge.default;
       const apiKey = "{SHOPIFY_API_KEY}";
       const urlParams = new URLSearchParams(window.location.search);
       const shopOrigin = urlParams.get("shop");
@@ -16,15 +16,19 @@
       const token = getCookie("access_token");
 
       if (!!token) {
-        fetch(
-          `{CLOUD_FUNCTION_ENDPOINT}/getResource` +
-            `?shop=${shopOrigin}&token=${token}&resource=shop`
-        )
-          .then((response) => response.json())
+        pingShopifyAdminAPI()
           .then(goToIndex)
           .catch(oauth);
       } else {
         oauth();
+      }
+
+      function pingShopifyAdminAPI(){
+        return fetch(
+          `{CLOUD_FUNCTION_ENDPOINT}/getResource` +
+            `?shop=${shopOrigin}&token=${token}&resource=shop`
+        )
+          .then((response) => response.json())
       }
 
       function oauth() {
@@ -32,14 +36,20 @@
         const permissionUrl =
           `/oauth/authorize?client_id=${apiKey}` +
           `&scope=read_script_tags,write_script_tags&redirect_uri=${redirectUri}`;
-        redirect.dispatch(Redirect.Action.ADMIN_PATH, permissionUrl);
+        if (window.top == window.self) {
+          window.location.assign(`https://${shopOrigin}/admin${permissionUrl}`);
+        } else {
+          redirect.dispatch(Redirect.Action.ADMIN_PATH, permissionUrl);
+        }
       }
 
       function goToIndex() {
-        redirect.dispatch(
-          Redirect.Action.APP,
-          `/index.html?shop=${shopOrigin}&access_token=${token}`
-        );
+        const indexUrl =`/index.html?shop=${shopOrigin}&access_token=${token}`
+        if (window.top == window.self) {
+          window.location.assign(`https://${shopOrigin}/admin${indexUrl}`);
+        } else {
+          redirect.dispatch(Redirect.Action.APP, indexUrl);
+        }
       }
     </script>
   </head>

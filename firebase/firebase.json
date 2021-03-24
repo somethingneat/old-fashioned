@@ -7,7 +7,7 @@
       "port": 5001
     },
     "database": {
-      "port": 5002
+      "port": 9000
     },
     "ui": {
       "enabled": true

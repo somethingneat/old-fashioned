@@ -22,7 +22,7 @@ const envVars = require(`./env.${
   (isProd && "prod") ||
   (isStaging && "staging") ||
   (!isProd && !isStaging && "dev")
-}.js`);
+}.json`);
 
 var options = {};
 

@@ -1,34 +1,36 @@
 const functions = require("firebase-functions");
 const rp = require("request-promise");
+const admin = require("firebase-admin");
+const { validateHMAC } = require("./utils");
 const SHOPIFY_CLIENT_SECRET = functions.config().env.shopify.client.secret;
-const SHOPIFY_CLIENT_ID = functions.config().env.shopify.client.id;
+const SHOPIFY_CLIENT_ID = functions.config().env.shopify.client.key;
 const FRONTEND_RESOURCE_URL = functions.config().env.frontend.resource.url;
 const TEST_MODE = functions.config().env.test.mode === "true";
-const EMULATING = functions.config().env.test.emulate === "true";
 const TEST_SHOPS = functions.config().env.test.shops
   ? functions.config().env.test.shops.split(",")
   : [];
-const admin = require("firebase-admin");
+const EMULATING = functions.config().env.test.emulate === "true";
 const app = admin.initializeApp(
   EMULATING
     ? {
-        projectId: "neatshop-dev",
-        databaseURL: "http://localhost:9000/?ns=neatshop-dev",
+        projectId: "old-fashioned-boilerplate",
+        databaseURL: "http://localhost:9000/?ns=old-fashioned-boilerplate",
       }
     : {}
 );
 const database = app.database();
-const { validateHMAC } = require("./utils");
 
 exports.helloWorld = functions.https.onRequest((req, res) => {
   res.send("Hello from Firebase!");
 });
 
 exports.erase = functions.https.onRequest((req, res) => {
+  // GDPR mandatory webhooks
   res.send("Thank you");
 });
 
 exports.requestData = functions.https.onRequest((req, res) => {
+  // GDPR mandatory webhooks
   res.send("Request recieved");
 });
 
@@ -95,33 +97,10 @@ exports.oauthCallback = functions.https.onRequest((req, res) => {
         );
     })
     .catch((err) => {
-      console.log(err);
       return res.redirect(
         `https://${shop}/admin/apps/${SHOPIFY_CLIENT_ID}/error.html`
       );
     });
-});
-
-exports.getToken = functions.https.onRequest((req, res) => {
-  res.set("Access-Control-Allow-Origin", "*");
-  res.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.set("Access-Control-Allow-Headers", "*");
-
-  const shop = req.query.shop;
-  const code = req.query.code;
-
-  return rp
-    .post({
-      uri: `https://${shop}/admin/oauth/access_token`,
-      form: {
-        code: code,
-        client_id: SHOPIFY_CLIENT_ID,
-        client_secret: SHOPIFY_CLIENT_SECRET,
-      },
-      json: true,
-    })
-    .then((body) => res.send(body))
-    .catch((err) => res.sendStatus((err && err.statusCode) || 500));
 });
 
 exports.getResource = functions.https.onRequest((req, res) => {

@@ -3,7 +3,6 @@ const querystring = require("querystring");
 
 const validateHMAC = ({ reqQuery, hmac, apiSecret }) => {
   const map = Object.assign({}, reqQuery);
-  delete map["signature"];
   delete map["hmac"];
   const message = querystring.stringify(map);
   const providedHmac = Buffer.from(hmac, "utf-8");

@@ -1,13 +1,7 @@
 {
+  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    "$shop": {
-      "access_token": {
-        ".read": false // can only be read by firebase admin sdk in the cloud fns
-      },
-      "$key": {
-        ".read": true
-      }
-    },
-    ".write": false // can only be write by firebase admin sdk in the cloud fns
+    ".read": false,
+    ".write": false
   }
 }
